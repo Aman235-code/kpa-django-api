@@ -1,0 +1,50 @@
+# Bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django secrets and settings
+.env
+*.env
+
+# Environment
+venv/
+env/
+.venv/
+ENV/
+.Python
+
+# Editor configs
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Django-specific
+*.log
+staticfiles/
+media/
+
+# Migrations cache (but NOT the migrations themselves)
+*/migrations/__pycache__/
+*/migrations/*.py[cod]
+
+# Testing and coverage
+.coverage
+.cache
+.pytest_cache/
+htmlcov/
+coverage.xml
+test-results/
+*.cover
+*.py,cover
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Postman collections (optional)
+*.postman_collection.json
