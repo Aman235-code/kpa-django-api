@@ -6,9 +6,9 @@ A Django-based backend API project for managing Wheel Specifications and Bogie C
 
 ## 🛠 Tech Stack
 
-- **Backend**: Django (REST Framework)
+- **Backend**: Django (Django REST Framework)
 - **Database**: PostgreSQL
-- **Environment Variables**: `.env` file using `python-decouple`
+- **Environment Variables**: Managed using `python-decouple`
 - **API Testing**: Postman / Thunder Client
 
 ---
@@ -17,8 +17,8 @@ A Django-based backend API project for managing Wheel Specifications and Bogie C
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/kpa-api.git
-   cd kpa-api
+   git clone https://github.com/Aman235-code/kpa-django-api.git
+   cd kpa-django-api
    ```
 
 2. **Create a virtual environment**
@@ -32,24 +32,23 @@ A Django-based backend API project for managing Wheel Specifications and Bogie C
    pip install -r requirements.txt
    ```
 
-4. **Set up the database**
+4. **Set up PostgreSQL**
 
-   Make sure PostgreSQL is running and create a database/user with these `.env` values:
-
-   Then create the database and user (adjust as needed):
+   Ensure PostgreSQL is running and execute the following SQL in `psql` or PGAdmin:
 
    ```sql
    CREATE DATABASE kpa_db;
    CREATE USER kpa_user WITH PASSWORD 'kpa_pass';
    GRANT ALL PRIVILEGES ON DATABASE kpa_db TO kpa_user;
 
-   -- Additional recommended permissions:
+   -- Recommended permissions:
    GRANT ALL ON SCHEMA public TO kpa_user;
    GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO kpa_user;
    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO kpa_user;
-
-
    ```
+
+5. **Create a `.env` file in the root folder** (same level as `manage.py`)
+   ```env
    DB_NAME=kpa_db
    DB_USER=kpa_user
    DB_PASSWORD=kpa_pass
@@ -57,13 +56,13 @@ A Django-based backend API project for managing Wheel Specifications and Bogie C
    DB_PORT=5432
    ```
 
-5. **Apply migrations**
+6. **Apply migrations**
    ```bash
    python manage.py makemigrations
    python manage.py migrate
    ```
 
-6. **Run the server**
+7. **Run the development server**
    ```bash
    python manage.py runserver
    ```
@@ -72,81 +71,144 @@ A Django-based backend API project for managing Wheel Specifications and Bogie C
 
 ## 🔌 API Endpoints
 
-### 1. **Create Wheel Specification**
-- **Endpoint**: `POST /api/wheel-specs/`
+### ✅ 1. Create Wheel Specification
+- **Method**: `POST`
+- **URL**: `http://127.0.0.1:8000/api/forms/wheel-specifications`
 - **Description**: Submits a new wheel specification form.
-- **Request Body**:
+- **Content-Type**: `application/json` 
+- **Sample Request**:
   ```json
-  {
-    "form_number": "WS001",
-    "submitted_by": "Engineer A",
-    "submitted_date": "2025-07-25"
+ { "form_number": "WHEEL-2025-001",
+  "submitted_by": "user_id_123",
+  "submitted_date": "2025-07-03",
+  "fields": {
+    "treadDiameterNew": "915 (900-1000)",
+    "lastShopIssueSize": "837 (800-900)",
+    "condemningDia": "825 (800-900)",
+    "wheelGauge": "1600 (+2,-1)",
+    "variationSameAxle": "0.5",
+    "variationSameBogie": "5",
+    "variationSameCoach": "13",
+    "wheelProfile": "29.4 Flange Thickness",
+    "intermediateWWP": "20 TO 28",
+    "bearingSeatDiameter": "130.043 TO 130.068",
+    "rollerBearingOuterDia": "280 (+0.0/-0.035)",
+    "rollerBearingBoreDia": "130 (+0.0/-0.025)",
+    "rollerBearingWidth": "93 (+0/-0.250)",
+    "axleBoxHousingBoreDia": "280 (+0.030/+0.052)",
+    "wheelDiscWidth": "127 (+4/-0)"
   }
-  ```
-- **Response**:
-  ```json
+}
+
+
+- **Sample Response**:
+
+  HTTP/1.1 201 Created
+  Content-Type: application/json
   {
-    "success": true,
-    "message": "Wheel specification submitted successfully.",
-    "data": {
-      "formNumber": "WS001",
-      "submittedBy": "Engineer A",
-      "submittedDate": "2025-07-25",
-      "status": "Saved"
-    }
+  "success": true,
+  "message": "Wheel specification submitted successfully.",
+  "data": {
+    "formNumber": "WHEEL-2025-001",
+    "submittedBy": "user_id_123",
+    "submittedDate": "2025-07-03",
+    "status": "Saved"
   }
-  ```
+}
 
----
 
-### 2. **Get All Wheel Specifications**
-- **Endpoint**: `GET /api/wheel-specs/`
-- **Description**: Retrieves all submitted wheel specification forms.
+### ✅ 2. Get Wheel Specifications
+- **Method**: `GET`
+- **URL**: `http://127.0.0.1:8000/api/forms/wheel-specifications?formNumber=WHEEL-2025-001`
+- **Description**: Retrieves the specified wheel specification form.
 
----
 
-### 3. **Create Bogie Checksheet**
-- **Endpoint**: `POST /api/bogie-checksheets/`
-- **Description**: Submits a bogie checksheet record.
+- **Sample Response**:
 
----
+ {
+  "id": 1,
+  "form_number": "WHEEL-2025-001",
+  "submitted_by": "user_id_123",
+  "submitted_date": "2025-07-03",
+  "fields": {
+    "wheelGauge": "1600 (+2,-1)",
+    "wheelProfile": "29.4 Flange Thickness",
+    "condemningDia": "825 (800-900)",
+    "wheelDiscWidth": "127 (+4/-0)",
+    "intermediateWWP": "20 TO 28",
+    "treadDiameterNew": "915 (900-1000)",
+    "lastShopIssueSize": "837 (800-900)",
+    "variationSameAxle": "0.5",
+    "rollerBearingWidth": "93 (+0/-0.250)",
+    "variationSameBogie": "5",
+    "variationSameCoach": "13",
+    "bearingSeatDiameter": "130.043 TO 130.068",
+    "rollerBearingBoreDia": "130 (+0.0/-0.025)",
+    "axleBoxHousingBoreDia": "280 (+0.030/+0.052)",
+    "rollerBearingOuterDia": "280 (+0.0/-0.035)"
+  }
+}
 
-### 4. **Get All Bogie Checksheets**
-- **Endpoint**: `GET /api/bogie-checksheets/`
-- **Description**: Retrieves all bogie checksheet submissions.
+
+
+### ✅ 3. Create Bogie Checksheet
+- **Method**: `POST`
+- **URL**: `http://127.0.0.1:8000/api/createBasicInfo`
+- **Description**: Creats a basic information of the user.
+- **Content-Type**: `application/json` 
+
+
+- **Sample Request**:
+ {
+  "name": "Aman",
+  "phone": "7760873976",
+  "email": "aman@example.com",
+  "address": "Kolkata, India"
+}
+
+- **Sample Response**:
+
+ {
+  "id": 1,
+  "name": "Aman",
+  "phone": "7760873976",
+  "email": "aman@example.com",
+  "address": "Kolkata, India"
+}
+
+### ✅ 4. Get the user basic info by their phone number
+- **Method**: `GET`
+- **URL**: `http://127.0.0.1:8000/api/getBasicInfoByPhoneNumber/7760873976`
+- **Description**: Retrieves the user profile based on their phone number.
+
+- **Sample Response**:
+
+ {
+  "id": 1,
+  "name": "Aman",
+  "phone": "7760873976",
+  "email": "aman@example.com",
+  "address": "Kolkata, India"
+}
 
 ---
 
 ## ⚠️ Assumptions & Limitations
 
-- No authentication system is implemented (Open API).
-- CSRF checks are bypassed for API testing with Postman or Thunder Client.
-- No frontend UI; this project only exposes backend APIs.
-- Validation assumes minimal required fields for demo purposes.
-
----
-
-## ✅ Environment Setup Notes
-
-Make sure your `.env` file is present at the root level with the following:
-
-```env
-DB_NAME=kpa_db
-DB_USER=kpa_user
-DB_PASSWORD=kpa_pass
-DB_HOST=localhost
-DB_PORT=5432
-```
+- No authentication (open access for testing).
+- CSRF checks are disabled for API testing ease.
+- Only minimal validation for demo purposes.
+- Database setup must match `.env` values manually.
 
 ---
 
 ## 🧪 Recommended Tools
 
 - [Postman](https://www.postman.com/)
-- [Thunder Client (VS Code extension)](https://www.thunderclient.com/)
+- [Thunder Client (VS Code Extension)](https://www.thunderclient.com/)
 
 ---
 
 ## 📄 License
 
-MIT License
+This project is licensed under the **MIT License**.
